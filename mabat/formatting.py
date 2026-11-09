@@ -7,7 +7,7 @@ HEBREW_MONTHS = [
 ]
 
 
-def _div_half_away(numer: int, denom: int) -> int:
+def div_round(numer: int, denom: int) -> int:
     """numer / denom rounded to the nearest int, halves away from zero."""
     negative = (numer < 0) != (denom < 0)
     n, d = abs(numer), abs(denom)
@@ -17,7 +17,7 @@ def _div_half_away(numer: int, denom: int) -> int:
 
 def ils(agorot: int) -> str:
     """12345.67 ILS -> '₪12,346'. Negative values render as '-₪150'."""
-    shekels = _div_half_away(abs(agorot), 100)
+    shekels = div_round(abs(agorot), 100)
     text = f"₪{shekels:,}"
     return f"-{text}" if agorot < 0 and shekels else text
 
@@ -26,7 +26,7 @@ def ratio_tenths(numer: int, denom: int) -> int | None:
     """numer/denom as tenths of a percent (314 == 31.4%). None if denom is 0."""
     if denom == 0:
         return None
-    return _div_half_away(numer * 1000, denom)
+    return div_round(numer * 1000, denom)
 
 
 def pct(tenths: int) -> str:
