@@ -8,15 +8,21 @@ without the client's source files.
 from __future__ import annotations
 
 from datetime import datetime
+from pathlib import Path
 
 import pandas as pd
 
 from mabat.anomalies.rules import SEVERITIES, Thresholds, detect, has_history
-from mabat.compute.pnl import Change, compute_pnl
+from mabat.compute.pnl import Change, available_months, compute_pnl
+from mabat.config import Config
+from mabat.errors import ValidationError
 from mabat.formatting import HEBREW_MONTHS, ils, month_label, pct
+from mabat.ingest.parser import INI, parse_export
+from mabat.ingest.validate import validate_export
 from mabat.models import ParsedExport
 from mabat.narrate.guard import safe_narrate
 from mabat.narrate.templates import title
+from mabat.normalize.ledger import build_ledger
 
 STATUS_READY = "ready"
 STATUS_NEEDS_REVIEW = "needs_review"
@@ -140,3 +146,43 @@ def build_context(
         "severity_counts": counts,
         "warnings": warnings,
     }
+
+
+def discover_exports(root: Path | str) -> list[Path]:
+    """Folders under `root` (or `root` itself) that hold an INI.TXT."""
+    root = Path(root)
+    if not root.is_dir():
+        return []
+    found = {p.parent for p in root.rglob("*") if p.is_file() and p.name.upper() == INI}
+    return sorted(found)
+
+
+def run_folder(
+    folder: Path | str,
+    config: Config,
+    month: str | None = None,
+    all_months: bool = False,
+    now: datetime | None = None,
+) -> list[dict]:
+    """Parse, validate and report on one export folder.
+
+    Returns one report context per requested month: the latest month with
+    activity by default, one named month, or every month in the export.
+    Raises ValidationError when the export cannot be trusted.
+    """
+    parsed = parse_export(folder, config.fieldmap)
+    warnings = validate_export(parsed)
+    ledger = build_ledger(parsed, config.classification)
+    months = available_months(ledger)
+    if not months:
+        raise ValidationError("בייצוא אין תנועות בחשבונות הכנסה או הוצאה")
+    if all_months:
+        targets = months
+    elif month is not None:
+        if month not in months:
+            raise ValidationError(f"אין נתונים לחודש {month}. חודשים זמינים: {', '.join(months)}")
+        targets = [month]
+    else:
+        targets = [months[-1]]
+    now = now or datetime.now()
+    return [build_context(parsed, ledger, warnings, m, config.thresholds, now) for m in targets]

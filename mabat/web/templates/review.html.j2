@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ r.business_name }} · {{ r.month_label }} · מבט</title>
+<style>
+{% include "base.css.j2" %}
+  html, body { height: 100%; }
+  body { display: flex; flex-direction: column; }
+  .topbar a.back { color: #fff; text-decoration: none; font-size: 14px; opacity: .9; }
+  .title { font-weight: 700; font-size: 16px; }
+  .spacer { flex: 1; }
+  .topbar form { margin: 0; }
+  .topbar .btn { border-color: #fff; background: #fff; color: var(--accent); }
+  .topbar .btn-quiet { background: transparent; color: #fff; border-color: rgba(255, 255, 255, .55); }
+  .topbar .chip-reviewed { border-color: transparent; }
+  iframe { flex: 1; width: 100%; border: 0; background: var(--page); }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <a class="back" href="/">→ כל הדוחות</a>
+  <span class="title">{{ r.business_name }} · {{ r.month_label }}</span>
+  <span class="chip chip-{{ r.status }}">{{ status_labels[r.status] }}</span>
+  <span class="spacer"></span>
+  {% if r.reviewed_at %}
+  <span class="chip chip-reviewed">נסקר · <span class="num">{{ r.reviewed_at | datetime }}</span></span>
+  {% else %}
+  <form method="post" action="/reports/{{ r.id }}/review">
+    <button class="btn" type="submit">סמן כנסקר</button>
+  </form>
+  {% endif %}
+  <a class="btn btn-quiet" href="/reports/{{ r.id }}/html?download=1">הורדת HTML</a>
+  <a class="btn btn-quiet" href="/reports/{{ r.id }}/pdf">הורדת PDF</a>
+</header>
+<iframe src="/reports/{{ r.id }}/html" title="תצוגת הדוח"></iframe>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>מבט · דוחות חודשיים</title>
+<style>
+{% include "base.css.j2" %}
+  main { max-width: 1040px; margin: 24px auto; padding: 0 20px 40px; }
+  .card { padding: 18px 20px; margin-bottom: 20px; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; }
+  h2 { margin: 0 0 4px; font-size: 16px; color: var(--accent); }
+  .hint { margin: 0 0 14px; color: var(--ink-3); font-size: 13.5px; }
+  .fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px 20px; align-items: end; }
+  label { display: block; font-size: 13.5px; color: var(--ink-2); }
+  label span { display: block; margin-bottom: 4px; font-weight: 600; color: var(--ink); }
+  input[type="file"], input[type="month"] {
+    width: 100%; padding: 6px 8px; border: 1px solid var(--line-strong); border-radius: 6px; background: #fff; font: inherit; font-size: 13.5px;
+  }
+  .check { display: flex; align-items: center; gap: 8px; padding-bottom: 8px; }
+  .check input { width: 16px; height: 16px; }
+  .actions { margin-top: 16px; }
+  .alert { padding: 12px 16px; margin-bottom: 20px; border: 1px solid #e3aaa6; border-radius: 6px; background: #fdf1f0; color: #7d1a15; }
+  .alert strong { display: block; margin-bottom: 4px; }
+  .alert ul { margin: 0; padding-inline-start: 18px; }
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { padding: 9px 10px; text-align: right; border-top: 1px solid var(--line); vertical-align: middle; }
+  thead th { border-top: 0; color: var(--ink-3); font-weight: 500; font-size: 13px; white-space: nowrap; }
+  td.name { font-weight: 600; }
+  .counts { color: var(--ink-2); font-size: 13px; white-space: nowrap; }
+  .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-inline-end: 4px; }
+  .dot-red { background: #d03b3b; } .dot-orange { background: #d9772b; } .dot-info { background: #5b6472; }
+  .counts span + span { margin-inline-start: 10px; }
+  .empty { padding: 26px 10px; text-align: center; color: var(--ink-3); }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">מבט<small>דוחות חודשיים ללקוחות · לשימוש רו"ח</small></div>
+</header>
+<main>
+  {% if errors %}
+  <div class="alert" role="alert">
+    <strong>{{ notice or "הייצוא לא עובד, ולא הופק דוח:" }}</strong>
+    <ul>
+      {% for e in errors %}
+      <li>{{ e }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  <section class="card">
+    <h2>העלאת ייצוא מבנה אחיד</h2>
+    <p class="hint">
+      בוחרים את תיקיית ה-OPENFRMT (אפשר תיקייה עם כמה לקוחות), או את שני הקבצים
+      INI.TXT ו-BKMVDATA.TXT (או BKMVDATA.zip). הקבצים מעובדים במחשב הזה ואינם נשמרים.
+    </p>
+    <form method="post" action="/upload" enctype="multipart/form-data">
+      <div class="fields">
+        <label><span>תיקייה</span><input type="file" name="files" webkitdirectory multiple></label>
+        <label><span>או שני הקבצים</span><input type="file" name="files" multiple accept=".txt,.TXT,.zip"></label>
+        <label><span>חודש (לא חובה)</span><input type="month" name="month"></label>
+        <label class="check"><input type="checkbox" name="all_months" value="1">דוח לכל חודש בייצוא</label>
+      </div>
+      <p class="hint" style="margin: 10px 0 0">בלי בחירת חודש מופק דוח לחודש האחרון שיש בו תנועות.</p>
+      <div class="actions"><button class="btn" type="submit">הפקת דוחות</button></div>
+    </form>
+  </section>
+
+  <section class="card">
+    <h2>דוחות</h2>
+    {% if reports %}
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>לקוח</th><th>ע.מ.</th><th>חודש</th><th>סטטוס</th><th>ממצאים</th><th>סקירה</th><th></th></tr>
+        </thead>
+        <tbody>
+          {% for r in reports %}
+          <tr>
+            <td class="name">{{ r.business_name }}</td>
+            <td><span class="num">{{ r.vat_id }}</span></td>
+            <td>{{ r.month_label }}</td>
+            <td><span class="chip chip-{{ r.status }}">{{ status_labels[r.status] }}</span></td>
+            <td class="counts">
+              {% set c = r.severity_counts %}
+              {% if c.red %}<span><i class="dot dot-red"></i>{{ c.red }} מהותיות</span>{% endif %}
+              {% if c.orange %}<span><i class="dot dot-orange"></i>{{ c.orange }} לבדיקה</span>{% endif %}
+              {% if c.info %}<span><i class="dot dot-info"></i>{{ c.info }} למידע</span>{% endif %}
+              {% if r.warning_count %}<span>{{ r.warning_count }} הערות נתונים</span>{% endif %}
+              {% if not (c.red or c.orange or c.info or r.warning_count) %}אין{% endif %}
+            </td>
+            <td>
+              {% if r.reviewed_at %}
+              <span class="chip chip-reviewed">נסקר · <span class="num">{{ r.reviewed_at | datetime }}</span></span>
+              {% else %}
+              <span class="chip chip-pending">טרם נסקר</span>
+              {% endif %}
+            </td>
+            <td><a class="btn btn-quiet" href="/reports/{{ r.id }}">פתיחה</a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <p class="empty">עדיין לא הופקו דוחות. מעלים ייצוא מבנה אחיד כדי להתחיל.</p>
+    {% endif %}
+  </section>
+</main>
+</body>
+</html>
