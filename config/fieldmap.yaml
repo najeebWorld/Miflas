@@ -1,0 +1,151 @@
+# מיפוי שדות לקובצי "מבנה אחיד" (OPENFRMT), מהדורה 1.31.
+# מקור: docs/spec/openfrmt-horaot-1.31.pdf (רשות המסים, 10.05.2009).
+# id = מספר השדה במפרט. start/end = עמודות, מבוססות 1, כולל שני הקצוות.
+# type: alnum = אלפאנומרי (מיושר לשמאל, ריפוד ברווחים)
+#       num   = נומרי (מיושר לימין, ריפוד באפסים)
+#       amount = X9(n)v99: תו סימן ואחריו ספרות, שתי האחרונות אחרי הנקודה
+# רשומות בלי fields נספרות לצורך ולידציה בלבד ותוכנן אינו מפוענח.
+
+spec_version: "1.31"
+
+records:
+  # ---- INI.TXT: רשומה תחילית (סעיף 3.1, עמ' 10) ----
+  A000:
+    file: INI.TXT
+    length: 466
+    fields:
+      - {id: 1000, name: record_code,            start: 1,   end: 4,   type: alnum}
+      - {id: 1001, name: future_1001,            start: 5,   end: 9,   type: alnum}
+      - {id: 1002, name: total_records,          start: 10,  end: 24,  type: num}
+      - {id: 1003, name: vat_id,                 start: 25,  end: 33,  type: num}
+      - {id: 1004, name: primary_id,             start: 34,  end: 48,  type: num}
+      - {id: 1005, name: system_constant,        start: 49,  end: 56,  type: alnum}
+      - {id: 1006, name: software_registration,  start: 57,  end: 64,  type: num}
+      - {id: 1007, name: software_name,          start: 65,  end: 84,  type: alnum}
+      - {id: 1008, name: software_version,       start: 85,  end: 104, type: alnum}
+      - {id: 1009, name: software_maker_vat_id,  start: 105, end: 113, type: num}
+      - {id: 1010, name: software_maker_name,    start: 114, end: 133, type: alnum}
+      - {id: 1011, name: software_type,          start: 134, end: 134, type: num}
+      - {id: 1012, name: output_path,            start: 135, end: 184, type: alnum}
+      - {id: 1013, name: bookkeeping_type,       start: 185, end: 185, type: num}
+      - {id: 1014, name: balance_required,       start: 186, end: 186, type: num}
+      - {id: 1015, name: company_number,         start: 187, end: 195, type: num}
+      - {id: 1016, name: deductions_file_number, start: 196, end: 204, type: num}
+      - {id: 1017, name: future_1017,            start: 205, end: 214, type: alnum}
+      - {id: 1018, name: business_name,          start: 215, end: 264, type: alnum}
+      - {id: 1019, name: address_street,         start: 265, end: 314, type: alnum}
+      - {id: 1020, name: address_house_number,   start: 315, end: 324, type: alnum}
+      - {id: 1021, name: address_city,           start: 325, end: 354, type: alnum}
+      - {id: 1022, name: address_zip,            start: 355, end: 362, type: alnum}
+      - {id: 1023, name: tax_year,               start: 363, end: 366, type: num}
+      - {id: 1024, name: range_start,            start: 367, end: 374, type: num}
+      - {id: 1025, name: range_end,              start: 375, end: 382, type: num}
+      - {id: 1026, name: process_date,           start: 383, end: 390, type: num}
+      - {id: 1027, name: process_time,           start: 391, end: 394, type: num}
+      - {id: 1028, name: language_code,          start: 395, end: 395, type: num}
+      - {id: 1029, name: charset,                start: 396, end: 396, type: num}
+      - {id: 1030, name: archiver_name,          start: 397, end: 416, type: alnum}
+      - {id: 1032, name: leading_currency,       start: 417, end: 419, type: alnum}
+      - {id: 1034, name: has_branches,           start: 420, end: 420, type: num}
+      - {id: 1035, name: future_1035,            start: 421, end: 466, type: alnum}
+
+  # ---- INI.TXT: רשומת סיכום (סעיף 3.2, עמ' 11) ----
+  SUMMARY:
+    file: INI.TXT
+    length: 19
+    fields:
+      - {id: 1050, name: record_code,   start: 1, end: 4,  type: alnum}
+      - {id: 1051, name: record_count,  start: 5, end: 19, type: num}
+
+  # ---- BKMVDATA.TXT: רשומת פתיחה (סעיף 4.1, עמ' 11) ----
+  A100:
+    file: BKMVDATA.TXT
+    length: 95
+    fields:
+      - {id: 1100, name: record_code,     start: 1,  end: 4,  type: alnum}
+      - {id: 1101, name: record_number,   start: 5,  end: 13, type: num}
+      - {id: 1102, name: vat_id,          start: 14, end: 22, type: num}
+      - {id: 1103, name: primary_id,      start: 23, end: 37, type: num}
+      - {id: 1104, name: system_constant, start: 38, end: 45, type: alnum}
+      - {id: 1105, name: future_1105,     start: 46, end: 95, type: alnum}
+
+  # ---- BKMVDATA.TXT: רשומת סגירה (סעיף 4.2, עמ' 11) ----
+  Z900:
+    file: BKMVDATA.TXT
+    length: 110
+    fields:
+      - {id: 1150, name: record_code,     start: 1,  end: 4,   type: alnum}
+      - {id: 1151, name: record_number,   start: 5,  end: 13,  type: num}
+      - {id: 1152, name: vat_id,          start: 14, end: 22,  type: num}
+      - {id: 1153, name: primary_id,      start: 23, end: 37,  type: num}
+      - {id: 1154, name: system_constant, start: 38, end: 45,  type: alnum}
+      - {id: 1155, name: total_records,   start: 46, end: 60,  type: num}
+      - {id: 1156, name: future_1156,     start: 61, end: 110, type: alnum}
+
+  # ---- BKMVDATA.TXT: תנועות בהנהלת חשבונות (סעיף 4.6, עמ' 15) ----
+  B100:
+    file: BKMVDATA.TXT
+    length: 317
+    fields:
+      - {id: 1350, name: record_code,         start: 1,   end: 4,   type: alnum}
+      - {id: 1351, name: record_number,       start: 5,   end: 13,  type: num}
+      - {id: 1352, name: vat_id,              start: 14,  end: 22,  type: num}
+      - {id: 1353, name: transaction_number,  start: 23,  end: 32,  type: num}
+      - {id: 1354, name: transaction_line,    start: 33,  end: 37,  type: num}
+      - {id: 1355, name: batch,               start: 38,  end: 45,  type: num}
+      - {id: 1356, name: transaction_type,    start: 46,  end: 60,  type: alnum}
+      - {id: 1357, name: reference,           start: 61,  end: 80,  type: alnum}
+      - {id: 1358, name: reference_doc_type,  start: 81,  end: 83,  type: num}
+      - {id: 1359, name: reference_2,         start: 84,  end: 103, type: alnum}
+      - {id: 1360, name: reference_2_doc_type, start: 104, end: 106, type: num}
+      - {id: 1361, name: details,             start: 107, end: 156, type: alnum}
+      - {id: 1362, name: date,                start: 157, end: 164, type: num}
+      - {id: 1363, name: value_date,          start: 165, end: 172, type: num}
+      - {id: 1364, name: account_key,         start: 173, end: 187, type: alnum}
+      - {id: 1365, name: counter_account,     start: 188, end: 202, type: alnum}
+      - {id: 1366, name: debit_credit,        start: 203, end: 203, type: num}
+      - {id: 1367, name: currency_code,       start: 204, end: 206, type: alnum}
+      - {id: 1368, name: amount,              start: 207, end: 221, type: amount}
+      - {id: 1369, name: foreign_amount,      start: 222, end: 236, type: amount}
+      - {id: 1370, name: quantity,            start: 237, end: 248, type: amount}
+      - {id: 1371, name: matching_1,          start: 249, end: 258, type: alnum}
+      - {id: 1372, name: matching_2,          start: 259, end: 268, type: alnum}
+      - {id: 1374, name: branch_id,           start: 269, end: 275, type: alnum}
+      - {id: 1375, name: entry_date,          start: 276, end: 283, type: num}
+      - {id: 1376, name: entered_by,          start: 284, end: 292, type: alnum}
+      - {id: 1377, name: future_1377,         start: 293, end: 317, type: alnum}
+
+  # ---- BKMVDATA.TXT: חשבון בהנהלת חשבונות (סעיף 4.7, עמ' 16) ----
+  B110:
+    file: BKMVDATA.TXT
+    length: 376
+    fields:
+      - {id: 1400, name: record_code,             start: 1,   end: 4,   type: alnum}
+      - {id: 1401, name: record_number,           start: 5,   end: 13,  type: num}
+      - {id: 1402, name: vat_id,                  start: 14,  end: 22,  type: num}
+      - {id: 1403, name: account_key,             start: 23,  end: 37,  type: alnum}
+      - {id: 1404, name: account_name,            start: 38,  end: 87,  type: alnum}
+      - {id: 1405, name: trial_balance_code,      start: 88,  end: 102, type: alnum}
+      - {id: 1406, name: trial_balance_desc,      start: 103, end: 132, type: alnum}
+      - {id: 1407, name: address_street,          start: 133, end: 182, type: alnum}
+      - {id: 1408, name: address_house_number,    start: 183, end: 192, type: alnum}
+      - {id: 1409, name: address_city,            start: 193, end: 222, type: alnum}
+      - {id: 1410, name: address_zip,             start: 223, end: 230, type: alnum}
+      - {id: 1411, name: address_country,         start: 231, end: 260, type: alnum}
+      - {id: 1412, name: country_code,            start: 261, end: 262, type: alnum}
+      - {id: 1413, name: parent_account,          start: 263, end: 277, type: alnum}
+      - {id: 1414, name: opening_balance,         start: 278, end: 292, type: amount}
+      - {id: 1415, name: total_debit,             start: 293, end: 307, type: amount}
+      - {id: 1416, name: total_credit,            start: 308, end: 322, type: amount}
+      - {id: 1417, name: code_6111,               start: 323, end: 326, type: num}
+      - {id: 1419, name: counterparty_vat_id,     start: 327, end: 335, type: num}
+      - {id: 1421, name: branch_id,               start: 336, end: 342, type: alnum}
+      - {id: 1422, name: opening_balance_foreign, start: 343, end: 357, type: amount}
+      - {id: 1423, name: foreign_currency_code,   start: 358, end: 360, type: alnum}
+      - {id: 1424, name: future_1424,             start: 361, end: 376, type: alnum}
+
+  # ---- רשומות שנספרות בלבד (טבלת הריכוז, סעיף 2.5, עמ' 8) ----
+  C100: {file: BKMVDATA.TXT, length: 444}
+  D110: {file: BKMVDATA.TXT, length: 339}
+  D120: {file: BKMVDATA.TXT, length: 222}
+  M100: {file: BKMVDATA.TXT, length: 298}
