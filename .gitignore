@@ -1,0 +1,17 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+
+# Client data never enters git: real exports, generated reports, local DB
+data/real/
+output/
+*.db
+*.sqlite
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
