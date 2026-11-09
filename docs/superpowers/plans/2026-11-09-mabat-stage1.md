@@ -154,54 +154,54 @@ class Finding:
 
 **Files:** `config/fieldmap.yaml`, `mabat/errors.py`, `mabat/models.py`, `mabat/formatting.py`, `mabat/ingest/fieldmap.py`, `tests/test_fieldmap.py`, `tests/test_formatting.py`
 
-- [ ] `test_fieldmap.py`: לכל רשומה עם שדות — השדות רציפים מ-1, לא חופפים, ומסתכמים ל-`length`; אורכים: A000 466, SUMMARY 19, A100 95, B100 317, B110 376, Z900 110, C100 444, D110 339, D120 222, M100 298; `build_record` → `slice_record` מחזיר את אותם ערכים; `build_record` של סכום `-123456` נותן `-00000000123456`.
-- [ ] `test_formatting.py`: `ils(1234567) == "₪12,346"`, `ils(-15000) == "-₪150"`, `pct(315) == "31.5%"`, `pct(-63) == "-6.3%"`, `ratio_tenths(1, 3) == 333`, `ratio_tenths(-1, 2000) == -1` (חצי הרחק מאפס), `ratio_tenths(5, 0) is None`, `month_label("2026-06") == "יוני 2026"`.
-- [ ] הרצה → כשל; מימוש; הרצה → עובר; commit.
+- [x] `test_fieldmap.py`: לכל רשומה עם שדות — השדות רציפים מ-1, לא חופפים, ומסתכמים ל-`length`; אורכים: A000 466, SUMMARY 19, A100 95, B100 317, B110 376, Z900 110, C100 444, D110 339, D120 222, M100 298; `build_record` → `slice_record` מחזיר את אותם ערכים; `build_record` של סכום `-123456` נותן `-00000000123456`.
+- [x] `test_formatting.py`: `ils(1234567) == "₪12,346"`, `ils(-15000) == "-₪150"`, `pct(315) == "31.5%"`, `pct(-63) == "-6.3%"`, `ratio_tenths(1, 3) == 333`, `ratio_tenths(-1, 2000) == -1` (חצי הרחק מאפס), `ratio_tenths(5, 0) is None`, `month_label("2026-06") == "יוני 2026"`.
+- [x] הרצה → כשל; מימוש; הרצה → עובר; commit.
 
 ### Task 2: זיהוי קידוד
 
 **Files:** `mabat/ingest/encoding.py`, `tests/test_encoding.py`
 
-- [ ] בדיקות: טקסט עברי מקודד ב-`iso8859_8` → `cp1255`; ב-`cp862` → `cp862`; ב-`utf-8` → `utf-8`; ASCII בלבד → `cp1255`; `declared_codec("1") == "cp1255"`, `("2") == "cp862"`, `("0") is None`.
-- [ ] כשל → מימוש → עובר → commit.
+- [x] בדיקות: טקסט עברי מקודד ב-`iso8859_8` → `cp1255`; ב-`cp862` → `cp862`; ב-`utf-8` → `utf-8`; ASCII בלבד → `cp1255`; `declared_codec("1") == "cp1255"`, `("2") == "cp862"`, `("0") is None`.
+- [x] כשל → מימוש → עובר → commit.
 
 ### Task 3: מחולל נתוני הדמה
 
 **Files:** `mabat/sampledata.py`, `tools/generate_sample.py`, `data/sample/…`, `tests/conftest.py`
 
-- [ ] `write_sample(out_root, encoding="iso8859_8") -> Path` מחזיר את תיקיית הייצוא. דטרמיניסטי.
-- [ ] `conftest.py`: fixtures `fieldmap`, `sample_dir` (נוצר ב-`tmp_path_factory`), `config`.
-- [ ] בדיקה ב-`tests/test_sampledata.py`: שתי הרצות נותנות קבצים זהים בייט-בבייט; כל שורה ב-`BKMVDATA.TXT` באורך הרשמי של הסוג שלה; סוף שורה CRLF.
-- [ ] commit (כולל `data/sample/`).
+- [x] `write_sample(out_root, encoding="iso8859_8") -> Path` מחזיר את תיקיית הייצוא. דטרמיניסטי.
+- [x] `conftest.py`: fixtures `fieldmap`, `sample_dir` (נוצר ב-`tmp_path_factory`), `config`.
+- [x] בדיקה ב-`tests/test_sampledata.py`: שתי הרצות נותנות קבצים זהים בייט-בבייט; כל שורה ב-`BKMVDATA.TXT` באורך הרשמי של הסוג שלה; סוף שורה CRLF.
+- [x] commit (כולל `data/sample/`).
 
 ### Task 4: פרסר
 
 **Files:** `mabat/ingest/parser.py`, `tests/test_parser.py`
 
-- [ ] בדיקות על הדמה: `header.business_name == 'סטודיו אלון עיצוב בע"מ'`, `vat_id == "514000017"`, `tax_year == 2026`; 17 חשבונות; תנועה ידועה מפוענחת (חשבון 6200, יוני, חובה, 720000 אגורות); `encoding == "cp1255"`; דמה ב-CP-862 ודמה ב-UTF-8 נותנות אותו שם עסק; `BKMVDATA.zip` במקום `.TXT` נקרא; שורה מקוצרת → `ValidationError` עם מספר השורה; קוד רשומה `X999` → `ValidationError`; סכום `+00000ABC…` → `ValidationError`; תיקייה בלי `INI.TXT` → `ValidationError`.
-- [ ] כשל → מימוש → עובר → commit.
+- [x] בדיקות על הדמה: `header.business_name == 'סטודיו אלון עיצוב בע"מ'`, `vat_id == "514000017"`, `tax_year == 2026`; 17 חשבונות; תנועה ידועה מפוענחת (חשבון 6200, יוני, חובה, 720000 אגורות); `encoding == "cp1255"`; דמה ב-CP-862 ודמה ב-UTF-8 נותנות אותו שם עסק; `BKMVDATA.zip` במקום `.TXT` נקרא; שורה מקוצרת → `ValidationError` עם מספר השורה; קוד רשומה `X999` → `ValidationError`; סכום `+00000ABC…` → `ValidationError`; תיקייה בלי `INI.TXT` → `ValidationError`.
+- [x] כשל → מימוש → עובר → commit.
 
 ### Task 5: ולידציה
 
 **Files:** `mabat/ingest/validate.py`, `tests/test_validate.py`
 
-- [ ] בדיקות (כל אחת משחיתה עותק של הדמה): דמה תקינה → `[]`; מחיקת שורת `B100` → עצירה (ספירה מול INI); שינוי 1002 → עצירה; שינוי 1155 → עצירה; החלפת סדר כך ש-`Z900` לא אחרונה → עצירה; מספר רשומה לא רציף → עצירה; מזהה ראשי שונה ב-`Z900` → עצירה; תנועה לחשבון בלי `B110` → עצירה; שינוי 1415 בחשבון אחד → אזהרה (לא עצירה) שמציינת את מפתח החשבון; שדה 1029 = 2 בקובץ ISO → אזהרה.
-- [ ] כשל → מימוש → עובר → commit.
+- [x] בדיקות (כל אחת משחיתה עותק של הדמה): דמה תקינה → `[]`; מחיקת שורת `B100` → עצירה (ספירה מול INI); שינוי 1002 → עצירה; שינוי 1155 → עצירה; החלפת סדר כך ש-`Z900` לא אחרונה → עצירה; מספר רשומה לא רציף → עצירה; מזהה ראשי שונה ב-`Z900` → עצירה; תנועה לחשבון בלי `B110` → עצירה; שינוי 1415 בחשבון אחד → אזהרה (לא עצירה) שמציינת את מפתח החשבון; שדה 1029 = 2 בקובץ ISO → אזהרה.
+- [x] כשל → מימוש → עובר → commit.
 
 ### Task 6: סיווג ולדג'ר
 
 **Files:** `config/classification.yaml`, `mabat/normalize/classify.py`, `mabat/normalize/ledger.py`, `mabat/config.py`, `tests/test_normalize.py`
 
-- [ ] בדיקות: בדמה — סכום `income` ליוני 11,350,000 אגורות, `expense` 7,785,000; אין שורות `balance_sheet`; כרטיס 6500 ביוני = ‎-15,000; קטגוריה של 6110 = "שכירות ואחזקה"; כלל `account_key` גובר כשהוא ראשון; כלל `code_6111_range` מתאים לחשבון עם קוד 6111; חשבון עם תנועות בלי סיווג → `ValidationError` שמכיל את המפתח; חשבון בלי תנועות ובלי סיווג לא עוצר; `date_field: value_date` מעביר את מכירות יוני ליולי.
-- [ ] כשל → מימוש → עובר → commit.
+- [x] בדיקות: בדמה — סכום `income` ליוני 11,350,000 אגורות, `expense` 7,785,000; אין שורות `balance_sheet`; כרטיס 6500 ביוני = ‎-15,000; קטגוריה של 6110 = "שכירות ואחזקה"; כלל `account_key` גובר כשהוא ראשון; כלל `code_6111_range` מתאים לחשבון עם קוד 6111; חשבון עם תנועות בלי סיווג → `ValidationError` שמכיל את המפתח; חשבון בלי תנועות ובלי סיווג לא עוצר; `date_field: value_date` מעביר את מכירות יוני ליולי.
+- [x] כשל → מימוש → עובר → commit.
 
 ### Task 7: חישוב רווח והפסד
 
 **Files:** `mabat/compute/pnl.py`, `tests/test_compute.py`
 
-- [ ] בדיקות על לדג'ר בנוי ידנית: הכנסות אפס → `margin_tenths is None`; אין חודש קודם → `previous is None` וכל ה-`Change` הם `None`; חודש קודם עם רווח שלילי → אחוז לפי ערך מוחלט של המכנה; חודש חסר באמצע הסדרה → אפסים; הסדרה לא מתחילה לפני חודש הנתונים הראשון ולא ארוכה מ-6.
-- [ ] בדיקות על הדמה: ערכי יוני ומאי והשינויים מהטבלה למעלה; `available_months` = ינואר–יוני.
-- [ ] כשל → מימוש → עובר → commit.
+- [x] בדיקות על לדג'ר בנוי ידנית: הכנסות אפס → `margin_tenths is None`; אין חודש קודם → `previous is None` וכל ה-`Change` הם `None`; חודש קודם עם רווח שלילי → אחוז לפי ערך מוחלט של המכנה; חודש חסר באמצע הסדרה → אפסים; הסדרה לא מתחילה לפני חודש הנתונים הראשון ולא ארוכה מ-6.
+- [x] בדיקות על הדמה: ערכי יוני ומאי והשינויים מהטבלה למעלה; `available_months` = ינואר–יוני.
+- [x] כשל → מימוש → עובר → commit.
 
 ### Task 8: חריגות
 
@@ -216,53 +216,53 @@ class Finding:
 - בלי 3 חודשי היסטוריה (`has_history` שקר): רק `sign_flip` רץ.
 - מיון: אדום, כתום, מידע; בתוך חומרה לפי ערך מוחלט של הסכום, יורד.
 
-- [ ] בדיקות סף לכל כלל: בדיוק על הסף (לא מופעל), אגורה מעל (מופעל), מתחת; מעבר כתום→אדום; סטייה לטובה → מידע; `missing_recurring` לא מופעל על הכנסה ולא כשאחד החודשים הקודמים אפס; `account_spike` מדוכא כשיש ממצא קטגוריה; בלי היסטוריה רק `sign_flip`.
-- [ ] בדיקה על הדמה: חמשת הממצאים של יוני בדיוק, לפי הסדר (אדום, שלושה כתומים לפי סכום, מידע); מאי → `[]`.
-- [ ] כשל → מימוש → עובר → commit.
+- [x] בדיקות סף לכל כלל: בדיוק על הסף (לא מופעל), אגורה מעל (מופעל), מתחת; מעבר כתום→אדום; סטייה לטובה → מידע; `missing_recurring` לא מופעל על הכנסה ולא כשאחד החודשים הקודמים אפס; `account_spike` מדוכא כשיש ממצא קטגוריה; בלי היסטוריה רק `sign_flip`.
+- [x] בדיקה על הדמה: חמשת הממצאים של יוני בדיוק, לפי הסדר (אדום, שלושה כתומים לפי סכום, מידע); מאי → `[]`.
+- [x] כשל → מימוש → עובר → commit.
 
 ### Task 9: ניסוח ושומר המספרים
 
 **Files:** `mabat/narrate/templates.py`, `mabat/narrate/guard.py`, `tests/test_narrate.py`
 
-- [ ] בדיקות: לכל אחד מחמשת ממצאי הדמה, המשפט מכיל את שם הנושא ואת הסכום המעוצב; כל תבנית עוברת את השומר; `safe_narrate(finding, narrator=lambda f: "ההוצאה עלתה ל-₪9,999")` מחזיר את התבנית (מספר זר); narrator שמחזיר משפט עם אותם מספרים מתקבל כלשונו; `numbers_in("₪12,345 ו-31.5%") == {"12345", "31.5"}`.
-- [ ] כשל → מימוש → עובר → commit.
+- [x] בדיקות: לכל אחד מחמשת ממצאי הדמה, המשפט מכיל את שם הנושא ואת הסכום המעוצב; כל תבנית עוברת את השומר; `safe_narrate(finding, narrator=lambda f: "ההוצאה עלתה ל-₪9,999")` מחזיר את התבנית (מספר זר); narrator שמחזיר משפט עם אותם מספרים מתקבל כלשונו; `numbers_in("₪12,345 ו-31.5%") == {"12345", "31.5"}`.
+- [x] כשל → מימוש → עובר → commit.
 
 ### Task 10: דוח HTML וגרף
 
 **Files:** `mabat/report/chart.py`, `mabat/report/render.py`, `mabat/report/templates/report.html.j2`, `mabat/pipeline.py` (`build_context`), `tests/test_report.py`
 
-- [ ] לפני כתיבת הגרף: לטעון את ה-skill `dataviz`.
-- [ ] `build_context(parsed, ledger, warnings, month, thresholds, now) -> dict` — מילון שניתן לסריאליזציה ל-JSON, עם ערכים גולמיים ומחרוזות מעוצבות, כולל `status`.
-- [ ] בדיקות: ה-HTML של יוני מכיל `dir="rtl"`, את שם העסק, "₪113,500", "₪77,850", "₪35,650", "18.2%", חמישה פריטי חריגה עם מחלקות חומרה, את שורת התחתית המדויקת, `<svg`, ואין בו `http://` או `https://`; `reviewed=False` מכיל "טיוטה", `reviewed=True` לא; `json.dumps(context)` עובד; סטטוס יוני `needs_review`, מאי `ready`.
-- [ ] כשל → מימוש → עובר; לפתוח את הדוח בדפדפן ולצלם לבדיקה חזותית → commit.
+- [x] לפני כתיבת הגרף: לטעון את ה-skill `dataviz`.
+- [x] `build_context(parsed, ledger, warnings, month, thresholds, now) -> dict` — מילון שניתן לסריאליזציה ל-JSON, עם ערכים גולמיים ומחרוזות מעוצבות, כולל `status`.
+- [x] בדיקות: ה-HTML של יוני מכיל `dir="rtl"`, את שם העסק, "₪113,500", "₪77,850", "₪35,650", "18.2%", חמישה פריטי חריגה עם מחלקות חומרה, את שורת התחתית המדויקת, `<svg`, ואין בו `http://` או `https://`; `reviewed=False` מכיל "טיוטה", `reviewed=True` לא; `json.dumps(context)` עובד; סטטוס יוני `needs_review`, מאי `ready`.
+- [x] כשל → מימוש → עובר; לפתוח את הדוח בדפדפן ולצלם לבדיקה חזותית → commit.
 
 ### Task 11: PDF
 
 **Files:** `mabat/report/pdf.py`, `tests/test_pdf.py`
 
-- [ ] בדיקה: `html_to_pdf` יוצר קובץ שמתחיל ב-`%PDF` וגדול מ-5KB; `pdftotext` על התוצאה מכיל "113,500".
-- [ ] כשל → מימוש → עובר → commit.
+- [x] בדיקה: `html_to_pdf` יוצר קובץ שמתחיל ב-`%PDF` וגדול מ-5KB; `pdftotext` על התוצאה מכיל "113,500".
+- [x] כשל → מימוש → עובר → commit.
 
 ### Task 12: אחסון, צינור ו-CLI
 
 **Files:** `mabat/store/db.py`, `mabat/pipeline.py`, `mabat/cli.py`, `mabat/__main__.py`, `tests/test_store.py`, `tests/test_pipeline.py`, `tests/test_cli.py`
 
-- [ ] `ReportStore(path)`: `upsert(context) -> int`, `list() -> list[dict]`, `get(id) -> dict | None`, `mark_reviewed(id, when)`. מפתח ייחודי `(vat_id, month)`; `upsert` חוזר מאפס `reviewed_at`.
-- [ ] `discover_exports(root) -> list[Path]`; `run_folder(folder, config, month=None, all_months=False, now=None) -> list[dict]`.
-- [ ] בדיקות: `run_folder` ברירת מחדל → דוח אחד ליוני; `all_months=True` → 6 דוחות, מרץ עם אזהרת היסטוריה; `month="2026-05"` → `ready`; חודש שלא קיים → `ValidationError`; `discover_exports` מוצא את הדמה מתיקיית השורש; CLI: `mabat run data/sample --out <tmp> --no-pdf` יוצר `514000017_2026-06.html` ומחזיר 0; תיקייה עם ייצוא פגום ועוד ייצוא תקין → התקין מופק, קוד יציאה 1.
-- [ ] כשל → מימוש → עובר → commit.
+- [x] `ReportStore(path)`: `upsert(context) -> int`, `list() -> list[dict]`, `get(id) -> dict | None`, `mark_reviewed(id, when)`. מפתח ייחודי `(vat_id, month)`; `upsert` חוזר מאפס `reviewed_at`.
+- [x] `discover_exports(root) -> list[Path]`; `run_folder(folder, config, month=None, all_months=False, now=None) -> list[dict]`.
+- [x] בדיקות: `run_folder` ברירת מחדל → דוח אחד ליוני; `all_months=True` → 6 דוחות, מרץ עם אזהרת היסטוריה; `month="2026-05"` → `ready`; חודש שלא קיים → `ValidationError`; `discover_exports` מוצא את הדמה מתיקיית השורש; CLI: `mabat run data/sample --out <tmp> --no-pdf` יוצר `514000017_2026-06.html` ומחזיר 0; תיקייה עם ייצוא פגום ועוד ייצוא תקין → התקין מופק, קוד יציאה 1.
+- [x] כשל → מימוש → עובר → commit.
 
 ### Task 13: דשבורד
 
 **Files:** `mabat/web/app.py`, `mabat/web/templates/index.html.j2`, `mabat/web/templates/review.html.j2`, `tests/test_web.py`
 
-- [ ] נתיבים: `GET /`, `POST /upload`, `GET /reports/{id}`, `GET /reports/{id}/html`, `GET /reports/{id}/pdf`, `POST /reports/{id}/review`.
-- [ ] בדיקות (`TestClient`): `GET /` → 200; העלאת קובצי הדמה → הדוח מופיע ברשימה עם "דורש בדיקה"; העלאת `INI.TXT` פגום → הודעת שגיאה בעברית ואין דוח חדש; `/reports/1/html` מכיל "טיוטה"; אחרי `POST /reports/1/review` אין "טיוטה"; `/reports/999` → 404.
-- [ ] כשל → מימוש → עובר; הרצת השרת ובדיקה בדפדפן → commit.
+- [x] נתיבים: `GET /`, `POST /upload`, `GET /reports/{id}`, `GET /reports/{id}/html`, `GET /reports/{id}/pdf`, `POST /reports/{id}/review`.
+- [x] בדיקות (`TestClient`): `GET /` → 200; העלאת קובצי הדמה → הדוח מופיע ברשימה עם "דורש בדיקה"; העלאת `INI.TXT` פגום → הודעת שגיאה בעברית ואין דוח חדש; `/reports/1/html` מכיל "טיוטה"; אחרי `POST /reports/1/review` אין "טיוטה"; `/reports/999` → 404.
+- [x] כשל → מימוש → עובר; הרצת השרת ובדיקה בדפדפן → commit.
 
 ### Task 14: סגירה
 
 **Files:** `README.md`
 
-- [ ] README בעברית: התקנה, הרצה על הדמה, מבנה ה-config, מה לבדוק כשמגיע קובץ אמיתי.
-- [ ] הרצת כל הבדיקות; הרצת `mabat run data/sample --all-months` ובדיקת הפלט; commit.
+- [x] README בעברית: התקנה, הרצה על הדמה, מבנה ה-config, מה לבדוק כשמגיע קובץ אמיתי.
+- [x] הרצת כל הבדיקות; הרצת `mabat run data/sample --all-months` ובדיקת הפלט; commit.

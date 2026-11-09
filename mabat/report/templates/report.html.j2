@@ -174,7 +174,7 @@
     </div>
     <div class="meta">
       {% if reviewed %}
-      <span class="chip chip-reviewed">נסקר על ידי רו"ח{% if reviewed_at_text %} · {{ reviewed_at_text }}{% endif %}</span>
+      <span class="chip chip-reviewed">נסקר על ידי רו"ח{% if reviewed_at_text %} · <span class="num">{{ reviewed_at_text }}</span>{% endif %}</span>
       {% else %}
       <span class="chip chip-{{ c.status }}">{{ status_label }}</span>
       {% endif %}
