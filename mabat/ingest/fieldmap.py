@@ -25,7 +25,9 @@ class Field:
 
 
 class FieldMap:
-    def __init__(self, records: dict[str, dict]):
+    def __init__(self, records: dict[str, dict], common: dict[str, dict]):
+        self._code_span = (common["record_code"]["start"] - 1, common["record_code"]["end"])
+        self._number_span = (common["record_number"]["start"] - 1, common["record_number"]["end"])
         self._lengths: dict[str, int] = {}
         self._fields: dict[str, list[Field]] = {}
         for code, spec in records.items():
@@ -45,6 +47,20 @@ class FieldMap:
 
     def fields(self, code: str) -> list[Field]:
         return self._fields[code]
+
+    def record_code(self, line: str) -> str:
+        """Record type code of a BKMVDATA line."""
+        return line[self._code_span[0] : self._code_span[1]]
+
+    def record_number(self, line: str) -> str:
+        """Running record number of a BKMVDATA line (raw text)."""
+        return line[self._number_span[0] : self._number_span[1]]
+
+    def build_count_only(self, code: str, record_number: int) -> str:
+        """A blank record of a type we count but do not decode (C100, D110...)."""
+        width = self._number_span[1] - self._number_span[0]
+        head = code + str(record_number).zfill(width)
+        return head.ljust(self._lengths[code])
 
     def slice_record(self, code: str, line: str) -> dict[str, str]:
         """Cut a decoded line into {field name: stripped raw text}."""
@@ -87,4 +103,4 @@ def _format(f: Field, value: object) -> str:
 def load_fieldmap(path: Path | str) -> FieldMap:
     with open(path, encoding="utf-8") as fh:
         data = yaml.safe_load(fh)
-    return FieldMap(data["records"])
+    return FieldMap(data["records"], data["bkmvdata_common"])

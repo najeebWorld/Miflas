@@ -8,6 +8,12 @@
 
 spec_version: "1.31"
 
+# שני השדות הראשונים משותפים לכל רשומה ב-BKMVDATA.TXT (סעיף 2.4 י, עמ' 7):
+# קוד הרשומה ומספר הרשומה הרץ. משמש גם לרשומות שאינן מפוענחות.
+bkmvdata_common:
+  record_code:   {start: 1, end: 4}
+  record_number: {start: 5, end: 13}
+
 records:
   # ---- INI.TXT: רשומה תחילית (סעיף 3.1, עמ' 10) ----
   A000:
